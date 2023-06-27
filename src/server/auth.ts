@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { type GetServerSidePropsContext } from "next";
@@ -9,17 +10,12 @@ import {
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/server/db";
-import { IdentityProvider, User } from "@prisma/client";
+import { type IdentityProvider, type User } from "@prisma/client";
 import ErrorCode from "@/lib/shared/errors/ErrorCode";
 import { decodePassword } from "@/lib/shared/utils/hash";
-import { USER_ROLES } from "@/lib/shared/enums";
+import { type USER_ROLES } from "@/lib/shared/enums";
 
-/**
- * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
- * object and keep type safety.
- *
- * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
- */
+
 declare module "next-auth" {
   interface Session extends DefaultSession {
     user: User & DefaultSession["user"];
@@ -41,11 +37,7 @@ interface JWT {
   identityProvider:IdentityProvider,
 }
 }
-/**
- * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
- *
- * @see https://next-auth.js.org/configuration/options
- */
+
 export const authOptions: NextAuthOptions = {
   callbacks: {
     async redirect({ url, baseUrl }) {
@@ -53,13 +45,13 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ token, session }) {
       console.log("consoling from token", token)
-      session.user.email = token?.email!;
+      session.user.email = token.email!;
       session.user.identityProvider = token.identityProvider;
       session.user.role = token.role!;
       session.user.username = token.name!
       return session;
     },
-    async jwt({ token, user, session, account, profile }) {
+    async jwt({ token }) {
       console.log("consoling from token", token)
       const existingUser = await prisma.user.findFirst({
         where: {
@@ -132,14 +124,13 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  pages: {
+    signIn: "/auth/signin",
+  },
   secret: process.env.JWT_SECRET,
 };
 
-/**
- * Wrapper for `getServerSession` so that you don't need to import the `authOptions` in every file.
- *
- * @see https://next-auth.js.org/configuration/nextjs
- */
+
 export const getServerAuthSession = (ctx: {
   req: GetServerSidePropsContext["req"];
   res: GetServerSidePropsContext["res"];

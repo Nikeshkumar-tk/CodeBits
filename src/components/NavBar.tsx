@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { signIn, signOut, useSession } from "next-auth/react"
 import {RoundedButton} from "./buttons"
 import { useRouter } from 'next/router';
