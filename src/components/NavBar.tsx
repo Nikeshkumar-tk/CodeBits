@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Loading from "./globals/Loading";
 import { useEffect, useState } from "react";
 const NavigationMenu = () => {
-    const { data, status, update } = useSession()
+    const { data, status } = useSession()
     const router = useRouter()
     const [hydrated, setHydrated] = useState<boolean>(false)
     useEffect(() => {

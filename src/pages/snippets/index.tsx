@@ -16,7 +16,7 @@ const SnippetsHomePage = () => {
     const { data: AllSnippets } = api.user.snippet.getAllSnippets.useQuery(null)
     return (
         <div className="flex justify-center items-center mt-10 ">
-            <div className="w-[60rem]">
+            <div className="w-[68rem]">
                 <div className=" flex justify-between  w-full">
                     <h1 className={`${roboto.className} font-bold text-3xl`}>Explore snippets</h1>
                <Button 
@@ -25,8 +25,14 @@ const SnippetsHomePage = () => {
                onClick={() => void router.push("/snippets/add")}
                />
                 </div>
-
-                <div className="mt-16">
+<ul className="flex mt-5  gap-3">
+    <li className="rounded-full bg-black text-white px-3 py-1 hover:bg-white hover:text-black cursor-pointer">javascript</li>
+    <li className="rounded-full bg-black text-white px-3 py-1 hover:bg-white hover:text-black cursor-pointer">typescript</li>
+    <li className="rounded-full bg-black text-white px-3 py-1 hover:bg-white hover:text-black cursor-pointer">python</li>
+    <li className="rounded-full bg-black text-white px-3 py-1 hover:bg-white hover:text-black cursor-pointer">ruby</li>
+    <li className="rounded-full bg-black text-white px-3 py-1 hover:bg-white hover:text-black cursor-pointer">rust</li>
+</ul>
+                <div className="mt-8 grid sm:grid-cols-3 gap-3">
                     {AllSnippets?.map(snippet => (
                         <SnippetCard
                             title={snippet.title}
