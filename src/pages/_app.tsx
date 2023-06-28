@@ -7,6 +7,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import NavigationMenu from "@/components/NavBar";
 import SideBar from "@/components/SideBar";
+import  { Toaster } from 'react-hot-toast';
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -29,6 +30,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         )}
         <div className='ml-64 pt-10 overflow-y-scroll'>
           <Component {...pageProps} />
+          <Toaster position="top-center"/>
         </div>
       </SessionProvider>
     </>

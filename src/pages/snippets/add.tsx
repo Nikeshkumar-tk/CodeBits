@@ -4,6 +4,8 @@ import Select from 'react-select';
 import { useRef, useState } from "react";
 import { Button } from "@/components/buttons";
 import { api } from "@/utils/api";
+import { toast } from "react-hot-toast";
+import { useRouter } from "next/router";
 
 const roboto = Roboto({
     weight: '900',
@@ -30,10 +32,16 @@ const AddTemplatePage = () => {
     const [newSnippet, setNewSnippet] = useState<string >("//Type your javascript code here")
     const newSnippetTitleRef = useRef<HTMLInputElement>(null)
     const newSnippetDescriptionRef = useRef<HTMLTextAreaElement>(null)
+    const router = useRouter()
     const { isLoading: snippetLanguageconfigLoading } = api.configs.getConfig.useQuery("SnippetLanguages", {
         onSuccess:(response) => setLanguageOptions(response)
     })
-    const {mutate:addSnippet, isLoading:addingNewSnippetLoading}  = api.user.snippet.add.useMutation()
+    const {mutate:addSnippet, isLoading:addingNewSnippetLoading}  = api.user.snippet.add.useMutation({
+        onSuccess:() => {
+            toast.success("Snippet creatted sucessfully")
+            void router.push("/snippets")
+        }
+    })
 
     const handleSnippetLanguageOptionChange = function (newValue: SnippetLanguageOptions) {
         setSnippetLanguage(newValue.language)
@@ -61,7 +69,7 @@ const AddTemplatePage = () => {
                 <h1 className={`font-mono text-2xl ${roboto.className}`}>Add new code snippets</h1>
                 <div className="mt-5">
                     <div className="flex gap-10">
-                        <input type="text" ref={newSnippetTitleRef} className="flex h-10 rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50 w-1/2" placeholder="Enter a title" />
+                        <input type="text" ref={newSnippetTitleRef} className="flex h-10 rounded-md border border-black/30 bg-transparent px-3 py-2 text-sm placeholder:text-gray-600 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursorallowed disable-not-d:opacity-50 w-1/2" placeholder="Enter a title" />
                         <Select
                             options={languageOptions}
                             placeholder="select language"
